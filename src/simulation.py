@@ -98,10 +98,11 @@ def run_simulation(setting="A", n=1000, reps=100, seed0=1, beta_true=None, alpha
         # Write intermediate raw outputs (append mode)
         df_batch = pd.DataFrame(batch)
         df_batch.to_csv(raw_path, mode="a", header=not os.path.exists(raw_path), index=False)
-        # Print last 3-5 lines as real-time snapshot
-        preview = df_batch[["seed", "method", "estimate", "bias"]].tail(5)
-        print("[Intermediate] setting=", setting, "rep=", r+1, "/", reps)
-        print(preview.to_string(index=False))
+        # Print preview only for the first three replicates
+        if r < 3:
+            preview = df_batch[["seed", "method", "estimate", "bias"]].head(5)
+            print("[Intermediate] setting=", setting, "rep=", r+1, "/", reps)
+            print(preview.to_string(index=False))
 
     df_est = pd.DataFrame(rows)
     est_path = os.path.join(results_dir, f"estimates_{setting}.csv")
