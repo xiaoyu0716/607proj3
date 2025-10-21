@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from scipy.special import expit  # logistic / inverse-logit
 
-def generate_data(n=1000, setting="A", seed=None, beta=None, alpha=None):
+def generate_data(n=1000, setting="A", seed=None, beta=None, alpha=None, V_config=None):
     """
     Generate simulated data for Bang & Robins (2005):
       A = cross-sectional missing-data model  (E[Y])
@@ -36,8 +36,14 @@ def generate_data(n=1000, setting="A", seed=None, beta=None, alpha=None):
     if seed is not None:
         np.random.seed(seed)
 
-    # four covariates V1–V4 ~ N(0,1)
-    V = np.random.normal(size=(n, 4))
+    # four covariates V1–V4
+    if V_config and isinstance(V_config, dict) and V_config.get("dist", "normal") == "normal" and "mean" in V_config and "cov" in V_config:
+        mean = np.array(V_config["mean"], dtype=float)
+        cov = np.array(V_config["cov"], dtype=float)
+        V = np.random.multivariate_normal(mean=mean, cov=cov, size=n)
+    else:
+        # default independent standard normal
+        V = np.random.normal(size=(n, 4))
     V1, V2, V3, V4 = V.T
     I1 = (V1 > 0).astype(float)
     I2 = (V2 > 0).astype(float)
