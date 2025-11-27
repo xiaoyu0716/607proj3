@@ -1,0 +1,13 @@
+
+=== 3. Stability Check (Singular Matrix) ===
+Scenario A: Perfect Collinearity (x2 = 2*x1)
+  [Unstable Method]:
+    Result: Returned a result (likely unreliable) -> [0.58594036 1.1718775 ]
+  [Stable Method]:
+    Result: SUCCESS (Handled via pseudo-inverse) -> [0.58594036 1.1718775 ]
+
+Scenario B: Zero Column (Matrix Rank Deficient)
+  [Unstable Method]:
+    Result: Returned a result -> [2.92969537 0.        ]
+  [Stable Method]:
+    Result: SUCCESS (Handled via pseudo-inverse) -> [2.92969537 0.        ]
